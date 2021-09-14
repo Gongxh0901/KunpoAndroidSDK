@@ -1,2 +1,3 @@
 rootProject.name = "KunpoAndroidSDK"
 include ':app'
+include ':lib-kunposdk'

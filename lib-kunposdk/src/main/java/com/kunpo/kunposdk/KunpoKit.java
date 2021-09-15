@@ -3,6 +3,8 @@ package com.kunpo.kunposdk;
 import android.app.Activity;
 import android.app.Application;
 
+import com.kunpo.kunposdk.manager.ViewManager;
+
 public class KunpoKit {
     private static KunpoKit _instance;
 
@@ -22,10 +24,12 @@ public class KunpoKit {
 
     public void init(Activity activity) {
         _activity = activity;
+        ViewManager.getInstance().init(activity);
     }
 
     public void init(Application application) {
         _application = application;
+        ViewManager.getInstance().init(application);
     }
 
     public LoginKit getLoginKit() {

@@ -2,6 +2,8 @@ package com.kunpo.kunposdk;
 
 import android.app.Activity;
 
+import com.kunpo.kunposdk.manager.ViewManager;
+import com.kunpo.kunposdk.view.DialogType;
 import com.kunpo.kunposdk.view.LoginView;
 
 /**
@@ -15,7 +17,7 @@ public class LoginKit {
 
     /** 手机号登录 */
     public void loginPhone() {
-        LoginView.openLoginView(_activity);
+        ViewManager.getInstance().createDialog(DialogType.LoginView);
     }
 
     /** 退出登录 */

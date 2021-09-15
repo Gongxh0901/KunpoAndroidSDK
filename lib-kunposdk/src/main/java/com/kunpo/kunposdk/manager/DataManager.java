@@ -4,15 +4,18 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.kunpo.kunposdk.data.RuningData;
 import com.kunpo.kunposdk.data.UserInfo;
 import com.kunpo.kunposdk.utils.DeviceUtils;
 import com.kunpo.kunposdk.utils.ResUtils;
 
 public class DataManager {
+    public UserInfo userInfo; // 用户信息
+    public RuningData runingData = new RuningData(); // 运行时数据
+
     private static DataManager _instance;
     private Application _application;
     private Activity _activity;
-    public UserInfo userInfo; // 用户信息
     private String _appID;
     private String _sign;
     private String _channelID = "0";

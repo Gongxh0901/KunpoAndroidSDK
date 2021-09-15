@@ -2,12 +2,11 @@ package com.kunpo.kunposdk.view;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.kunpo.kunposdk.manager.ViewManager;
 import com.kunpo.kunposdk.utils.KunpoLog;
 import com.kunpo.lib_kunposdk.R;
 
@@ -16,18 +15,7 @@ import com.kunpo.lib_kunposdk.R;
  */
 public class LoginView extends BaseDialog {
     private static final String TAG = "ui/LoginView";
-
-    public static void openLoginView(Context context) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                LoginView loginView = new LoginView(context);
-                loginView.show();
-            }
-        });
-    }
-
-    private LoginView(Context context) {
+    public LoginView(Context context) {
         super(context);
         setCancelable(false);
     }
@@ -45,6 +33,7 @@ public class LoginView extends BaseDialog {
         buttonLoginPhone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 KunpoLog.d(TAG, "手机号登录");
+                ViewManager.getInstance().createDialog(DialogType.LoginPhoneView);
             }
         });
 

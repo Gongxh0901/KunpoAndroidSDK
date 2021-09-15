@@ -26,11 +26,12 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_width="15dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="15dp"
                 android:contentDescription="@string/line"
-                android:src="@drawable/image_back" />
+                android:src="@drawable/image_back"
+                tools:layout_centerVertical="true" />
 
             <Button
                 android:id="@+id/button_back"
@@ -65,8 +66,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="310dp"
             android:layout_height="116dp"
+            android:layout_marginLeft="6dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/k_shadow">
 
@@ -79,13 +81,13 @@
                 android:background="@null"
                 android:hint="@string/phone_number_hint"
                 android:imeOptions="flagNoExtractUi"
+                android:importantForAutofill="no"
                 android:inputType="phone"
                 android:singleLine="true"
                 android:textColor="#25A2FF"
                 android:textColorHint="#ccc"
                 android:textCursorDrawable="@drawable/k_bg_gray"
-                android:textSize="14sp"
-                android:importantForAutofill="no">
+                android:textSize="14sp">
 
                 <requestFocus />
             </EditText>
@@ -94,7 +96,7 @@
                 android:id="@+id/imv_fenge"
                 android:layout_width="270dp"
                 android:layout_height="1dp"
-                android:layout_above="@id/edt_login_password"
+                android:layout_above="@id/input_verify_code"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="15dp"
@@ -102,7 +104,7 @@
                 android:contentDescription="@string/line" />
 
             <EditText
-                android:id="@+id/edt_login_password"
+                android:id="@+id/input_verify_code"
                 android:layout_width="200dp"
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
@@ -112,21 +114,21 @@
                 android:background="@null"
                 android:hint="@string/verify_code"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="textPassword"
+                android:importantForAutofill="no"
+                android:inputType="number"
                 android:maxLength="20"
                 android:singleLine="true"
                 android:textColor="#25A2FF"
                 android:textColorHint="#ccc"
                 android:textCursorDrawable="@drawable/k_bg_gray"
-                android:textSize="14sp"
-                android:importantForAutofill="no">
+                android:textSize="14sp">
 
             </EditText>
 
             <Button
                 android:id="@+id/button_get_verify_code"
                 android:layout_width="80dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="10dp"
@@ -149,8 +151,9 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/image_button1"
-                android:text="@string/login" />
+                android:background="@drawable/btn_login_selector"
+                android:text="@string/login"
+                android:textColor="@color/cardview_dark_background" />
         </FrameLayout>
     </LinearLayout>
 </FrameLayout>

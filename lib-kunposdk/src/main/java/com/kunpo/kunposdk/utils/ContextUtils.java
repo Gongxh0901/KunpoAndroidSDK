@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 /**
@@ -79,30 +82,69 @@ public class ContextUtils {
     }
 
     /**
+     * 显示toast提示
      * @param context
-     * @param text
+     * @param text 文本
      */
     public static void showToast(final Context context, final String text) {
+        showToast(context, text, Gravity.BOTTOM);
+    }
+
+    /**
+     * 显示toast提示
+     * @param context
+     * @param text
+     * @param {Gravity.CENTER} gravity 位置
+     */
+    public static void showToast(final Context context, final String text, int gravity) {
+        showToast(context, text, gravity, 0, 0);
+    }
+
+    public static void showToast(final Context context, final String text, int gravity, int offsetx, int offsety) {
         runOnMainLooper(new Runnable() {
             public void run() {
-                if (null!=context){
-                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-                }
 
+                if (null!=context){
+                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+                    toast.setGravity(gravity, offsetx, offsety);
+                    toast.show();
+                }
             }
         });
     }
 
+    /**
+     * 显示toast提示
+     * @param context
+     * @param text 文本
+     */
     public static void showLongToast(final Context context, final String text) {
+        showToast(context, text, Gravity.BOTTOM);
+    }
+
+    /**
+     * 显示toast提示
+     * @param context
+     * @param text
+     * @param {Gravity.CENTER} gravity 位置
+     */
+    public static void showLongToast(final Context context, final String text, int gravity) {
+        showToast(context, text, gravity, 0, 0);
+    }
+
+    public static void showLongToast(final Context context, final String text, int gravity, int offsetx, int offsety) {
         runOnMainLooper(new Runnable() {
             public void run() {
-                if (null!=context){
-                    Toast.makeText(context, text, Toast.LENGTH_LONG).show();
-                }
 
+                if (null!=context){
+                    Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+                    toast.setGravity(gravity, offsetx, offsety);
+                    toast.show();
+                }
             }
         });
     }
+
     /**
      * 取消进度条
      *
@@ -110,9 +152,7 @@ public class ContextUtils {
      */
     public static void cancelProgressDialog(final Context context) {
         if (_globalProgressDialog != null) {
-
             runOnMainLooper(new Runnable() {
-
                 public void run() {
                     //增加非null判断
                     if (null!=_globalProgressDialog){
@@ -120,7 +160,6 @@ public class ContextUtils {
                         _globalProgressDialog.hide();
                         _globalProgressDialog = null;
                     }
-
                 }
             });
         }
@@ -134,9 +173,7 @@ public class ContextUtils {
      */
     public static void showProgressDialog(final Context context, final String message) {
         cancelProgressDialog(context);
-
         runOnMainLooper(new Runnable() {
-
             public void run() {
                 if (null!=context){
                     _globalProgressDialog = new ProgressDialog(context);

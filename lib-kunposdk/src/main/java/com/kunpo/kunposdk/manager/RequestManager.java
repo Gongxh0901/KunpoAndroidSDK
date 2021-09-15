@@ -94,7 +94,7 @@ public class RequestManager {
     /**
      * 获取验证码
      * @param phone_number 手机号
-     * @param scene 场景
+     * @param scene 场景 （0 登录 1 注册 2 游客绑定 3 绑定手机 4 修改密码）
      * @param {VerifyCodeListener} listener
      */
     public void getVerifyCode(final String phone_number, final int scene, final VerifyCodeListener listener) {

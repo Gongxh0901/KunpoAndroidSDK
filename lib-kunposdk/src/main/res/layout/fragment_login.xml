@@ -48,7 +48,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/image_button1"
+                android:background="@drawable/btn_login_selector"
                 android:text="@string/phone_number_login" />
 
         </FrameLayout>

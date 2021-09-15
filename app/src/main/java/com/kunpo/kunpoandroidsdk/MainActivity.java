@@ -35,4 +35,24 @@ public class MainActivity extends Activity {
             }
         });
     }
+
+    protected void onStart() {
+        super.onStart();
+    }
+
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    protected void onStop() {
+        super.onStop();
+    }
+
+    protected void onResume() {
+        super.onResume();
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

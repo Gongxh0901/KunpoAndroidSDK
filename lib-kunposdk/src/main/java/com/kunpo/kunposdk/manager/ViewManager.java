@@ -3,7 +3,6 @@ package com.kunpo.kunposdk.manager;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -82,5 +81,12 @@ public class ViewManager {
     private void addDialog(Dialog dialog) {
         hideTopDialog();
         _stack.push(dialog);
+    }
+
+    public void onDestroy() {
+        for (Dialog dialog :_stack) {
+            dialog.dismiss();
+        }
+        _stack.clear();
     }
 }

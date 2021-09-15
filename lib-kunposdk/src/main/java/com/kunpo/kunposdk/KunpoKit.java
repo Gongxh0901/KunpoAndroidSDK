@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.kunpo.kunposdk.manager.ViewManager;
+import com.kunpo.kunposdk.utils.KunpoLog;
 
 public class KunpoKit {
+    private final String TAG = "KunpoKit";
     private static KunpoKit _instance;
 
     private Activity _activity;
@@ -44,5 +46,27 @@ public class KunpoKit {
             _realNameKit = new RealNameKit(_activity);
         }
         return _realNameKit;
+    }
+
+
+    protected void onStart() {
+        KunpoLog.d(TAG, "onStart");
+    }
+
+    protected void onRestart() {
+        KunpoLog.d(TAG, "onRestart");
+    }
+
+    protected void onStop() {
+        KunpoLog.d(TAG, "onStop");
+    }
+
+    protected void onResume() {
+        KunpoLog.d(TAG, "onResume");
+    }
+
+    protected void onDestroy() {
+        KunpoLog.d(TAG, "onDestroy");
+        ViewManager.getInstance().onDestroy();
     }
 }

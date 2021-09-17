@@ -26,8 +26,4 @@ public class BaseDialog extends Dialog {
         super.onCreate(savedInstanceState);
 
     }
-
-    protected View findViewById(String id) {
-        return this.findViewById(ResUtils.getId(getContext(), id));
-    }
 }

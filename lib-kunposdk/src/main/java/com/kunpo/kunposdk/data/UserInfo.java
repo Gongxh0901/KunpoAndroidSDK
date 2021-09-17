@@ -29,10 +29,10 @@ public class UserInfo {
     public String phone_number = ""; // 手机号
     public int expire_time = -1; //token过期时间（秒）
 
-    public int single_max_pay = -1; // 单次最大可充值金额（单位：分；-1标识无限制）
+    public int single_max_pay = -1; // 单次最大可充值金额（单位：分；-1表示无限制）
     public int surplus_max_pay = -1; // 剩余可充值金额（单位：分；-1表示无限制）
     public int played_time = 0; // 已经玩了多长时间（单位：秒）
-    public int surplus_play_time = -1; // 剩余游玩时间（单位：秒；-1标识无限制）
+    public int surplus_play_time = -1; // 剩余游玩时间（单位：秒；-1表示无限制）
     public String refuse_msg = ""; // 防沉迷限制原因
     /**
      * 防沉迷限制状态

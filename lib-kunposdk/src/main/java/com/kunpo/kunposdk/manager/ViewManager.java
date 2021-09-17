@@ -46,6 +46,13 @@ public class ViewManager {
         showTopDialog();
     }
 
+    public void closeAllDialog() {
+        for (Dialog dialog :_stack) {
+            dialog.dismiss();
+        }
+        _stack.clear();
+    }
+
     public void createDialog(DialogType dialogType) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -84,9 +91,6 @@ public class ViewManager {
     }
 
     public void onDestroy() {
-        for (Dialog dialog :_stack) {
-            dialog.dismiss();
-        }
-        _stack.clear();
+        closeAllDialog();
     }
 }

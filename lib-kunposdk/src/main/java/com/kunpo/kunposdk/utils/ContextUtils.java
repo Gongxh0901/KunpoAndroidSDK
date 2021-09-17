@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.kunpo.lib_kunposdk.R;
+
 /**
  * Created by KimCh.
  */
@@ -73,7 +75,7 @@ public class ContextUtils {
                     localBuilder.setTitle(title);
                     localBuilder.setMessage(message);
                     localBuilder.setCancelable(false);
-                    localBuilder.setPositiveButton(ResUtils.getString(context, "ok"), clickListener);
+                    localBuilder.setPositiveButton(R.string.gotit, clickListener);
                     localBuilder.show();
                 }
 

@@ -35,8 +35,8 @@ public class DataManager {
     public void onCreate(Application application) {
         _application = application;
         _deviceID = DeviceUtils.getDeviceId();
-        Bundle bundle = ResUtils.getApplicationMetaData(application);
-        _appID = bundle.getString("KUNPO_APP_ID");
+//        Bundle bundle = ResUtils.getApplicationMetaData(application);
+//        _appID = bundle.getString("KUNPO_APP_ID");
     }
 
     /**

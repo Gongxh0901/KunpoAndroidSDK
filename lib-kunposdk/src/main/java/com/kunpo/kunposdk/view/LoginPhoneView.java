@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.kunpo.kunposdk.KunpoKit;
 import com.kunpo.kunposdk.data.UserInfo;
 import com.kunpo.kunposdk.listener.LoginListener;
 import com.kunpo.kunposdk.listener.VerifyCodeListener;
@@ -92,9 +93,12 @@ public class LoginPhoneView extends BaseDialog {
                         KunpoLog.d(TAG, "get Verify Code:" + errorInfo.toJsonString());
                         ContextUtils.showToast(context, "验证码获取失败", Gravity.CENTER);
 
+                        //TODO:: 流程测试 begin
                         _countdown = 60L;
                         DataManager.getInstance().runingData.verify_keepto = Utils.timestamp() + _countdown;
+                        _verify_code = "1234";
                         _tryStartTimer();
+                        //TODO:: 流程测试 end
                     }
                     public void onSuccess(String code) {
                         _countdown = 60L;
@@ -123,12 +127,20 @@ public class LoginPhoneView extends BaseDialog {
                     ContextUtils.showToast(context, "请输入正确的手机号", Gravity.CENTER);
                     return;
                 }
+                ContextUtils.showProgressDialog(context, "登录中...");
                 RequestManager.getInstance().loginPhoneNumber(phoneNumber, _verify_code, new LoginListener() {
                     public void onFailure(ErrorInfo errorInfo) {
-
+                        KunpoLog.d(TAG, "登录失败:" + errorInfo.toJsonString());
+                        ContextUtils.cancelProgressDialog(context);
+                        ContextUtils.showToast(context, "登录失败:" + errorInfo.toJsonString());
+                        KunpoKit.getInstance().getLoginKit().getListener().onFailure(errorInfo);
                     }
                     public void onSuccess(UserInfo userInfo) {
+                        ContextUtils.cancelProgressDialog(context);
+                        ContextUtils.showToast(context, "登录成功");
 
+                        ViewManager.getInstance().closeAllDialog();
+                        KunpoKit.getInstance().getLoginKit().getListener().onSuccess(userInfo);
                     }
                 });
             }
@@ -138,17 +150,11 @@ public class LoginPhoneView extends BaseDialog {
     private void _initInputPhone() {
         _input_phone.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // KunpoLog.d(TAG, "beforeTextChanged:" + s + " start:" + start + " count:" + count + " after:" + after);
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // KunpoLog.d(TAG, "onTextChanged:" + s + " start:" + start + " before:" + before + " count:" + count);
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable text) {
-                KunpoLog.d(TAG, "afterTextChanged:" + text);
                 _btn_login.setEnabled(Utils.isPhoneNumber(text.toString())); // 设置按钮是否可点击
             }
         });
@@ -170,6 +176,7 @@ public class LoginPhoneView extends BaseDialog {
                 _countdown--;
                 if (_countdown <= 0) {
                     _timer.cancel();
+                    _timer = null;
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
@@ -189,5 +196,13 @@ public class LoginPhoneView extends BaseDialog {
             }
         };
         _timer.schedule(timerTask, 0, 1000); //立刻执行，间隔1秒循环执行
+    }
+
+    protected void onStop() {
+        super.onStop();
+        if (null != _timer) {
+            _timer.cancel();
+            _timer = null;
+        }
     }
 }

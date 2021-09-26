@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kunpo.lib_kunposdk">
 
+    <!-- 获取网络状态权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 读取手机号权限 -->
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <!-- 网络访问权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

@@ -10,10 +10,6 @@ import java.util.Map;
 
 /** 登录请求 */
 public class RequestGetVerifyCode extends RequestBase {
-    protected void generateHeader(Map<String, String> headerMap) {
-        super.generateHeader(headerMap);
-    }
-
     /**
      * 获取验证码
      * @param phone_number 手机号

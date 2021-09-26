@@ -9,10 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestLogout extends RequestBase {
-    protected void generateHeader(Map<String, String> headerMap) {
-        super.generateHeader(headerMap);
-    }
-
     /**
      * 登出
      * @param openid 当前用户openid

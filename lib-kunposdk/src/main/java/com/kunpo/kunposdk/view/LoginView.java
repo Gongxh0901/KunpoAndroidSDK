@@ -49,31 +49,5 @@ public class LoginView extends BaseDialog {
                 KunpoLog.d(TAG, "微信登录");
             }
         });
-//        tv_title = (TextView) findViewById("tv_real_title");
-//        tv_tip = (TextView) findViewById("tv_real_tip");
-//
-//        et_name = (EditText) findViewById("et_name");
-//        et_name.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                String name = et_name.getText().toString();
-//                String reg = "[^\u4E00-\u9FA5]";
-//                String valid = Pattern.compile(reg).matcher(name).replaceAll("").trim();
-//                if (!TextUtils.equals(name, valid)) {
-//                    et_name.setText(valid);
-//                    et_name.setSelection(valid.length());
-//                }
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
     }
 }

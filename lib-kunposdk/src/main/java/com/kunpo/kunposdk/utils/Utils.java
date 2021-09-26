@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.kunpo.kunposdk.manager.DataManager;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,8 +20,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +57,58 @@ public class Utils {
             return text;
         }
         return tmpSBuffer.toString();
+    }
+
+    /**
+     * 根据 header和params生成加密后的sign
+     * @param headerMap
+     * @param paramsMap
+     * @return
+     */
+    public static String generateSign(Map<String, String> headerMap, Map<String, Object> paramsMap) {
+        Map<String, String> tempMap = new TreeMap<>();
+        tempMap.put("appid", headerMap.get("KP-Appid"));
+        tempMap.put("appsecret", DataManager.getInstance().getAppSecret());
+        tempMap.put("timestamp", headerMap.get("KP-Timestamp"));
+        tempMap.putAll(analysisMap(paramsMap));
+
+        boolean isFirst = true;
+        String sign = "";
+        Set<String> keySet = tempMap.keySet();
+        Iterator<String> iter = keySet.iterator();
+        while (iter.hasNext()) {
+            if (!isFirst) {
+                sign += "&";
+            }
+            String key = iter.next();
+            String value = tempMap.get(key);
+            sign += (key + "=" + value);
+            isFirst = false;
+        }
+        KunpoLog.d(TAG, "sign:" + sign);
+        String md5_sign = Utils.getMD5(sign);
+        KunpoLog.d(TAG, "md5_sign:" + md5_sign);
+        return md5_sign;
+    }
+
+    private static Map<String, String> analysisMap(Map<String, Object> paramsMap) {
+        Map<String, String> tempMap = new TreeMap<>();
+
+        for (Map.Entry<String, Object> entry : paramsMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if (value == null) {
+                continue;
+            }
+            if (value instanceof List) {
+                tempMap.putAll(analysisMap((HashMap<String, Object>) value));
+            } else if (value instanceof Map) {
+                tempMap.putAll(analysisMap((Map<String, Object>) value));
+            } else {
+                tempMap.put(key, String.valueOf(value));
+            }
+        }
+        return tempMap;
     }
 
     public static boolean isEmptyString(String code) {

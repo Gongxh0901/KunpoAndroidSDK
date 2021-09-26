@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.kunpo.kunposdk.KunpoKit;
+import com.kunpo.kunposdk.data.ChannelType;
 import com.kunpo.kunposdk.data.RuningData;
 import com.kunpo.kunposdk.data.UserInfo;
 import com.kunpo.kunposdk.utils.DeviceUtils;
@@ -17,8 +19,7 @@ public class DataManager {
     private Application _application;
     private Activity _activity;
     private String _appID;
-    private String _sign;
-    private String _channelID = "0";
+    private ChannelType _channelID = ChannelType.Android;
     private String _deviceID;
 
     public static DataManager getInstance() {
@@ -35,8 +36,6 @@ public class DataManager {
     public void onCreate(Application application) {
         _application = application;
         _deviceID = DeviceUtils.getDeviceId();
-//        Bundle bundle = ResUtils.getApplicationMetaData(application);
-//        _appID = bundle.getString("KUNPO_APP_ID");
     }
 
     /**
@@ -55,26 +54,22 @@ public class DataManager {
     }
 
     public String getAppID() {
-        return _appID;
+        return KunpoKit.getInstance().getKunpoParams().appid();
+    }
+
+    public String getAppSecret() {
+        return KunpoKit.getInstance().getKunpoParams().appSecret();
     }
 
     public String getDeviceID() {
         return _deviceID;
     }
 
-    public void setChannelID(String channel) {
+    public void setChannelID(ChannelType channel) {
         _channelID = channel;
     }
 
-    public String getChannelID() {
+    public ChannelType getChannelID() {
         return _channelID;
-    }
-
-    public void setSign(String sign) {
-        _sign = sign;
-    }
-
-    public String getSign() {
-        return _sign;
     }
 }

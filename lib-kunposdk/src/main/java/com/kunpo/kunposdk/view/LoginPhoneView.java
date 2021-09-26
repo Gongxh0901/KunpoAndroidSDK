@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,6 +27,7 @@ import com.kunpo.kunposdk.utils.KunpoLog;
 import com.kunpo.kunposdk.utils.Utils;
 import com.kunpo.lib_kunposdk.R;
 
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,7 +42,6 @@ public class LoginPhoneView extends BaseDialog {
     private Button _btn_login;
     private EditText _input_verify;
     private EditText _input_phone;
-    private String _verify_code = ""; // 验证码
     private Timer _timer;
     private Long _countdown = 0L;
     public LoginPhoneView(Context context) {
@@ -87,23 +88,14 @@ public class LoginPhoneView extends BaseDialog {
                 }
                 // 手机号正确
                 KunpoLog.d(TAG, "手机号:" + phoneNumber);
-                RequestManager.getInstance().getVerifyCode(phoneNumber, 0, new VerifyCodeListener() {
+                RequestManager.getInstance().getVerifyCode(phoneNumber, 1, new VerifyCodeListener() {
                     public void onFailure(ErrorInfo errorInfo) {
                         // 获取验证码失败
-                        KunpoLog.d(TAG, "get Verify Code:" + errorInfo.toJsonString());
                         ContextUtils.showToast(context, "验证码获取失败", Gravity.CENTER);
-
-                        //TODO:: 流程测试 begin
-                        _countdown = 60L;
-                        DataManager.getInstance().runingData.verify_keepto = Utils.timestamp() + _countdown;
-                        _verify_code = "1234";
-                        _tryStartTimer();
-                        //TODO:: 流程测试 end
                     }
-                    public void onSuccess(String code) {
-                        _countdown = 60L;
+                    public void onSuccess(Map<String, Object> mapResult) {
+                        _countdown = Long.valueOf(String.valueOf(mapResult.get("countdown")));
                         DataManager.getInstance().runingData.verify_keepto = Utils.timestamp() + _countdown;
-                        _verify_code = code;
                         _tryStartTimer();
                     }
                 });
@@ -118,17 +110,13 @@ public class LoginPhoneView extends BaseDialog {
                     ContextUtils.showToast(context, "请输入验证码", Gravity.CENTER);
                     return;
                 }
-                if (!_verify_code.equals(_input_verify.getText().toString())) {
-                    ContextUtils.showToast(context, "请输入正确的验证码", Gravity.CENTER);
-                    return;
-                }
                 String phoneNumber = _input_phone.getText().toString();
                 if (!Utils.isPhoneNumber(phoneNumber)) {
                     ContextUtils.showToast(context, "请输入正确的手机号", Gravity.CENTER);
                     return;
                 }
                 ContextUtils.showProgressDialog(context, "登录中...");
-                RequestManager.getInstance().loginPhoneNumber(phoneNumber, _verify_code, new LoginListener() {
+                RequestManager.getInstance().loginPhoneNumber(phoneNumber, _input_verify.getText().toString(), new LoginListener() {
                     public void onFailure(ErrorInfo errorInfo) {
                         KunpoLog.d(TAG, "登录失败:" + errorInfo.toJsonString());
                         ContextUtils.cancelProgressDialog(context);

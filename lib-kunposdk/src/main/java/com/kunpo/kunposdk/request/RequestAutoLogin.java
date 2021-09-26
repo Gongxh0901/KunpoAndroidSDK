@@ -5,10 +5,6 @@ import com.kunpo.kunposdk.utils.ContextUtils;
 import java.util.Map;
 
 public class RequestAutoLogin extends RequestBase {
-    protected void generateHeader(Map<String, String> headerMap) {
-        super.generateHeader(headerMap);
-    }
-
     /**
      * 自动登录
      * @param openid 当前用户openid

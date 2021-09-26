@@ -1,8 +1,10 @@
 package com.kunpo.kunposdk.request;
 
+import android.app.Activity;
 import android.os.Build;
 import android.util.ArrayMap;
 
+import com.kunpo.kunposdk.KunpoKit;
 import com.kunpo.kunposdk.listener.RequestListener;
 import com.kunpo.kunposdk.manager.DataManager;
 import com.kunpo.kunposdk.network.KunpoHttpClient;
@@ -10,6 +12,7 @@ import com.kunpo.kunposdk.network.core.KunpoRequest;
 import com.kunpo.kunposdk.network.core.KunpoRequestCallBack;
 import com.kunpo.kunposdk.network.core.KunpoResponse;
 import com.kunpo.kunposdk.utils.Constant;
+import com.kunpo.kunposdk.utils.ContextUtils;
 import com.kunpo.kunposdk.utils.DeviceUtils;
 import com.kunpo.kunposdk.utils.ErrorInfo;
 import com.kunpo.kunposdk.utils.JsonUtils;
@@ -19,6 +22,7 @@ import com.kunpo.kunposdk.utils.Utils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 abstract class RequestBase {
     private static final String TAG = "Request/RequestBase";
@@ -27,12 +31,11 @@ abstract class RequestBase {
     protected RequestListener _requestListener;
     RequestBase() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            _requestHeaders = new ArrayMap<>();
             _requestParams = new ArrayMap<>();
         } else {
-            _requestHeaders = new HashMap<>();
             _requestParams = new HashMap<>();
         }
+        _requestHeaders = new TreeMap<>();
     }
 
     protected void get(String url) {
@@ -49,26 +52,11 @@ abstract class RequestBase {
      * @param url
      */
     private void request(String method, final String url) {
-        KunpoLog.d(TAG, "开始请求" + _requestParams.get("callback_url"));
+        KunpoLog.d(TAG, "开始请求 url:" + url);
+        _requestHeaders.put("KP-Sign", Utils.generateSign(_requestHeaders, _requestParams));
+        KunpoLog.i(TAG, "headers:" + _requestHeaders.toString());
+        KunpoLog.i(TAG, "params:" + _requestParams.toString());
         KunpoRequest request = new KunpoRequest(method, _requestHeaders, _requestParams);
-//         SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
-//         Date curDate = new Date(System.currentTimeMillis());
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    // http://yapi.lanfeitech.com/mock/103/
-//                    InetAddress x = java.net.InetAddress.getByName("ucenter.kunpogames.com");
-//                    String ipAddress = x.getHostAddress(); // 得到字符串形式的ip地址
-//                    Log.d(TAG, "ip:" + ipAddress);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    Log.d(TAG, "域名解析出错"+e.getMessage());
-//                }
-//            }
-//        }).start();
-
-        KunpoLog.i(TAG, "url:" + url + " headers:" + _requestHeaders.toString() + " params:" + _requestParams.toString());
         KunpoHttpClient httpClient = KunpoHttpClient.builder().url(url).request(request);
         httpClient.execute(new KunpoRequestCallBack() {
             @Override
@@ -82,7 +70,6 @@ abstract class RequestBase {
                 if (null == response) {
                     onFail(0, "");
                 } else {
-                    KunpoLog.i(TAG, "code:" + response.getCode() + " responseBody:" + response.getBody());
                     onFail(response.getCode(), response.getBody());
                 }
             }
@@ -114,7 +101,7 @@ abstract class RequestBase {
         common_params.put("os_version", DeviceUtils.getOSVersionName());
         common_params.put("screen_height", DeviceUtils.getWidthPixels());
         common_params.put("screen_width", DeviceUtils.getHeightPixels());
-        common_params.put("channel_id", DataManager.getInstance().getChannelID());
+        common_params.put("channel_id", String.valueOf(DataManager.getInstance().getChannelID().ordinal()));
 
         _requestParams.put("common_params", common_params);
     }
@@ -134,10 +121,9 @@ abstract class RequestBase {
      * header数据
      * @param headerMap
      */
-    protected void generateHeader(Map<String, String> headerMap) {
+    protected final void generateHeader(Map<String, String> headerMap) {
         _requestHeaders.clear();
         _requestHeaders.put("Content-Type", "application/json");
-        _requestHeaders.put("KP-Sign", DataManager.getInstance().getSign());
         _requestHeaders.put("KP-Appid", DataManager.getInstance().getAppID());
         if (DataManager.getInstance().userInfo != null) {
             _requestHeaders.put("KP-Token", DataManager.getInstance().userInfo.token);
@@ -149,46 +135,50 @@ abstract class RequestBase {
     }
 
     /** 失败 */
-    protected void onFail(int status, String response) {
-        KunpoLog.d(TAG, "onFail:" + status + ":" + response);
+    protected void onFail(int code, String msg) {
+        KunpoLog.d(TAG, "onFail:" + code + ":" + msg);
         if (_requestListener != null) {
-            _requestListener.onFail(new ErrorInfo(Constant.ERROR_CODE_NET, Constant.ERROR_MESSAGE_NET));
+            _requestListener.onFail(new ErrorInfo(String.valueOf(code), msg));
         }
     }
 
     /** 成功 */
     protected void onSuccess(int status, String response) {
         KunpoLog.d(TAG, "onSuccess status:" + status + " response:" + response);
-        if (_requestListener != null) {
-            Map<String, Object> responseMap = JsonUtils.jsonStringToMap(response);
-            if (responseMap != null) {
-                String result;
-                result = (String) responseMap.get("result");
-                if (result != null && result.equalsIgnoreCase("ok")) {
-                    Map<String, Object> retMap = null;
-                    try {
-                        if ((responseMap.get("data")) instanceof List) {
-                            retMap = new HashMap<>();
-                            retMap.put("data", (List) responseMap.get("data"));
-                        } else {
-                            retMap = (Map<String, Object>) responseMap.get("data");
-                            if (null == retMap) {
-                                retMap = new HashMap<>();
-                            }
-                        }
-                    } catch (Exception e) {
-                        retMap = new HashMap<>();
-                    }
-                    if (retMap != null) {
-                        _requestListener.onSuccess(retMap);
-                    }
-                } else {
-                    String message = (String) responseMap.get("message");
-                    _requestListener.onFail(new ErrorInfo(result, message));
+        Map<String, Object> responseMap = JsonUtils.jsonStringToMap(response);
+        Activity activity = DataManager.getInstance().getActivity();
+        if (null == responseMap) {
+            ContextUtils.showDialog(activity, Constant.ERROR_CODE_PARSE, Constant.ERROR_MESSAGE_PARSE);
+            return;
+        }
+        int code = (int) responseMap.get("code");
+        if (code == 0) {
+            Map<String, Object> retMap = null;
+            try {
+                Object data = responseMap.get("data");
+                if (data instanceof List) {
+                    retMap = new HashMap<>();
+                    retMap.put("data", data);
+                } else if (data instanceof Map) {
+                    retMap = (Map<String, Object>) data;
                 }
-            } else {
-                _requestListener.onFail(new ErrorInfo(Constant.ERROR_CODE_PARSE, Constant.ERROR_MESSAGE_PARSE));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            if (null != _requestListener) {
+                if (retMap != null) {
+                    _requestListener.onSuccess(retMap);
+                } else {
+                    _requestListener.onSuccess(new HashMap<>());
+                }
+            }
+        } else {
+            String code_string = String.valueOf(code);
+            String msg = String.valueOf(responseMap.get("msg"));
+            if (null != _requestListener) {
+                _requestListener.onFail(new ErrorInfo(code_string,  msg));
+            }
+            ContextUtils.showDialog(activity, code_string, msg);
         }
     }
 }

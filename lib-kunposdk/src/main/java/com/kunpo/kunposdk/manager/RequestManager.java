@@ -10,6 +10,8 @@ import com.kunpo.kunposdk.request.RequestGetVerifyCode;
 import com.kunpo.kunposdk.request.RequestLoginPhonenumber;
 import com.kunpo.kunposdk.request.RequestLogout;
 import com.kunpo.kunposdk.utils.ErrorInfo;
+import com.kunpo.kunposdk.utils.JsonUtils;
+import com.kunpo.kunposdk.utils.KunpoLog;
 
 import java.util.Map;
 
@@ -75,18 +77,7 @@ public class RequestManager {
                 listener.onFailure(errorInfo);
             }
             public void onSuccess(Map<String, Object> mapResult) {
-                if (mapResult.containsKey("code") && mapResult.containsKey("msg")) {
-                    // TODO:: 未验证
-                    String code = String.valueOf(mapResult.get("code"));
-                    String msg = String.valueOf(mapResult.get("msg"));
-                    if(code.equals("200")) {
-                        listener.onSuccess();
-                    } else {
-                        listener.onFailure(new ErrorInfo(code, msg));
-                    }
-                } else {
-                    listener.onFailure(new ErrorInfo("-1", "not has key: \"code\""));
-                }
+                listener.onSuccess();
             }
         });
     }
@@ -105,14 +96,7 @@ public class RequestManager {
                 }
             }
             public void onSuccess(Map<String, Object> mapResult) {
-                if (mapResult.containsKey("code")) {
-                    // TODO:: 未验证
-                    String code = String.valueOf(mapResult.get("code"));
-                    String msg = String.valueOf(mapResult.get("msg"));
-                    listener.onSuccess(code);
-                } else {
-                    listener.onFailure(new ErrorInfo("-1", "not has key: \"code\""));
-                }
+                listener.onSuccess(mapResult);
             }
         });
     }

@@ -3,6 +3,7 @@ package com.kunpo.kunposdk;
 import android.app.Activity;
 import android.app.Application;
 
+import com.kunpo.kunposdk.data.KunpoParams;
 import com.kunpo.kunposdk.manager.DataManager;
 import com.kunpo.kunposdk.manager.ViewManager;
 import com.kunpo.kunposdk.utils.KunpoLog;
@@ -17,7 +18,7 @@ public class KunpoKit {
     /** 对外接口的实例 */
     private LoginKit _loginKit;
     private RealNameKit _realNameKit;
-
+    private KunpoParams _params;
     public static KunpoKit getInstance() {
         if (_instance == null) {
             _instance = new KunpoKit();
@@ -25,16 +26,36 @@ public class KunpoKit {
         return _instance;
     }
 
+    public void setParams(KunpoParams params) {
+        _params = params;
+    }
+
     public void init(Activity activity) {
-        _activity = activity;
-        ViewManager.getInstance().init(activity);
-        DataManager.getInstance().onCreate(activity);
+        try {
+            if (null == _params) {
+                throw new Exception("请先使用 setParams 设置参数后再初始化");
+            }
+            _activity = activity;
+            ViewManager.getInstance().init(activity);
+            DataManager.getInstance().onCreate(activity);
+        } catch (Exception e) {
+            KunpoLog.e(TAG, e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void init(Application application) {
-        _application = application;
-        ViewManager.getInstance().init(application);
-        DataManager.getInstance().onCreate(application);
+        try {
+            if (null == _params) {
+                throw new Exception("请先使用 setParams 设置参数后再初始化");
+            }
+            _application = application;
+            ViewManager.getInstance().init(application);
+            DataManager.getInstance().onCreate(application);
+        } catch (Exception e) {
+            KunpoLog.e(TAG, e.toString());
+            e.printStackTrace();
+        }
     }
 
     public LoginKit getLoginKit() {
@@ -51,6 +72,9 @@ public class KunpoKit {
         return _realNameKit;
     }
 
+    public KunpoParams getKunpoParams() {
+        return _params;
+    }
 
     protected void onStart() {
         KunpoLog.d(TAG, "onStart");

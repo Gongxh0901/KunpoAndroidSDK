@@ -10,9 +10,6 @@ import java.util.Map;
 /** 登录请求 */
 public class RequestLoginPhonenumber extends RequestBase {
     /** 用户登录地址 */
-    protected void generateHeader(Map<String, String> headerMap) {
-        super.generateHeader(headerMap);
-    }
 
     /**
      * 手机号登录

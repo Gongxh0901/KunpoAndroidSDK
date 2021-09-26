@@ -10,8 +10,6 @@ import com.kunpo.kunposdk.request.RequestGetVerifyCode;
 import com.kunpo.kunposdk.request.RequestLoginPhonenumber;
 import com.kunpo.kunposdk.request.RequestLogout;
 import com.kunpo.kunposdk.utils.ErrorInfo;
-import com.kunpo.kunposdk.utils.JsonUtils;
-import com.kunpo.kunposdk.utils.KunpoLog;
 
 import java.util.Map;
 
@@ -41,6 +39,7 @@ public class RequestManager {
             public void onSuccess(Map<String, Object> mapResult) {
                 UserInfo userInfo = new UserInfo();
                 userInfo.loadMap(mapResult);
+                userInfo.isVisitor = false;
                 DataManager.getInstance().userInfo = userInfo;
                 listener.onSuccess(userInfo);
             }

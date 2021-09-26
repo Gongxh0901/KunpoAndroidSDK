@@ -1,13 +1,11 @@
 package com.kunpo.kunposdk.view;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -127,7 +125,7 @@ public class LoginPhoneView extends BaseDialog {
                         ContextUtils.cancelProgressDialog(context);
                         ContextUtils.showToast(context, "登录成功");
 
-                        ViewManager.getInstance().closeAllDialog();
+                        ViewManager.getInstance().closeAllDialog(); // 关闭所有dialog
                         KunpoKit.getInstance().getLoginKit().getListener().onSuccess(userInfo);
                     }
                 });

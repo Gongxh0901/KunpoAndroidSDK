@@ -13,6 +13,7 @@ public class UserInfo {
     public String openid = ""; // openid
     public String uid = ""; // 客户端展示的用户ID（邀请码）
     public String token = ""; // token（请求接口需要携带此token）
+    public boolean isVisitor = true; // 是否游客
     /**
      * 性别
      * 0:男 1:女 2:未知
@@ -120,6 +121,9 @@ public class UserInfo {
         if (map.containsKey("refuse_code")) {
             refuse_code = (int) map.get("refuse_code");
         }
+        if (map.containsKey("isVisitor")) {
+            isVisitor = Boolean.parseBoolean(String.valueOf(map.get("isVisitor")));
+        }
         return this;
     }
 
@@ -132,6 +136,7 @@ public class UserInfo {
                 " status:" + status +
                 " expire_time:" + expire_time +
                 " refuse_code:" + refuse_code +
+                " isVisitor:" + isVisitor +
                 " refuse_msg:" + refuse_msg;
     }
 
@@ -152,6 +157,7 @@ public class UserInfo {
         map.put("expire_time", expire_time);
         map.put("refuse_code", refuse_code);
         map.put("refuse_msg", refuse_msg);
+        map.put("isVisitor", isVisitor);
         return JsonUtils.mapToJsonString(map);
     }
 }

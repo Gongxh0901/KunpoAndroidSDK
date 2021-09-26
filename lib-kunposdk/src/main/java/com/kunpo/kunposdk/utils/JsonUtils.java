@@ -1,5 +1,6 @@
 package com.kunpo.kunposdk.utils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -96,6 +97,56 @@ public class JsonUtils {
                 }
                 return retList;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Object[] objectToList(Object object) {
+        try {
+            int length = Array.getLength(object);
+            Object[] list = new Object[length];
+            for (int i = 0; i < list.length; i++) {
+                list[i] = Array.get(object, i);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static JSONArray arrayToJsonArray(Object[] list) {
+        try {
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < list.length; i++) {
+                jsonArray.put(list[i]);
+            }
+            return jsonArray;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static JSONObject mapTojsonObject(Map<String, Object> map) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            // Map<String, Object> params = request.getParams();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof Map) {
+                    jsonObject.put(key, mapTojsonObject((Map<String, Object>)value));
+                } else if (value instanceof List) {
+                     jsonObject.put(key, arrayToJsonArray( objectToList(value)) );
+                } else {
+                    jsonObject.put(key, value);
+                }
+            }
+            return jsonObject;
         } catch (Exception e) {
             e.printStackTrace();
         }

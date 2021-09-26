@@ -37,18 +37,4 @@ public class RequestLoginPhonenumber extends RequestBase {
             }
         });
     }
-//    /**
-//     * @param requestListener
-//     */
-//    public void logout(RequestListener requestListener) {
-//        generateData(null);
-//        generateHeader(null);
-//
-//        _requestListener = requestListener;
-//        ContextUtils.runOnMainLooper(new Runnable() {
-//            public void run() {
-//                post(ConstantsKey.BASE_URL + URL_LOGOUT);
-//            }
-//        });
-//    }
 }

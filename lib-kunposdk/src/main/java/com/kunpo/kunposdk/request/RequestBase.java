@@ -54,23 +54,23 @@ abstract class RequestBase {
     private void request(String method, final String url) {
         KunpoLog.d(TAG, "开始请求 url:" + url);
         _requestHeaders.put("KP-Sign", Utils.generateSign(_requestHeaders, _requestParams));
-        KunpoLog.i(TAG, "headers:" + _requestHeaders.toString());
-        KunpoLog.i(TAG, "params:" + _requestParams.toString());
         KunpoRequest request = new KunpoRequest(method, _requestHeaders, _requestParams);
         KunpoHttpClient httpClient = KunpoHttpClient.builder().url(url).request(request);
         httpClient.execute(new KunpoRequestCallBack() {
             @Override
             public void success(KunpoResponse response) {
-                KunpoLog.i(TAG,  "请求结果===" + response.getCode() + ": " + response.getBody());
+                KunpoLog.i(TAG,  "请求结果 code:" + response.getCode() + " body:" + response.getBody());
                 onSuccess(response.getCode(), response.getBody());
             }
 
             @Override
             public void error(KunpoResponse response) {
                 if (null == response) {
-                    onFail(0, "");
+                    KunpoLog.i(TAG,  "请求失败response:null");
+                    onFail(-999, "response is null");
                 } else {
-                    onFail(response.getCode(), response.getBody());
+                    KunpoLog.i(TAG,  "请求失败 code:" + response.getCode() + " msg:" + response.getMessage());
+                    onFail(response.getCode(), response.getMessage());
                 }
             }
         });
@@ -144,7 +144,6 @@ abstract class RequestBase {
 
     /** 成功 */
     protected void onSuccess(int status, String response) {
-        KunpoLog.d(TAG, "onSuccess status:" + status + " response:" + response);
         Map<String, Object> responseMap = JsonUtils.jsonStringToMap(response);
         Activity activity = DataManager.getInstance().getActivity();
         if (null == responseMap) {

@@ -2,6 +2,7 @@ package com.kunpo.kunposdk.network.core;
 
 import android.util.Log;
 
+import com.kunpo.kunposdk.utils.JsonUtils;
 import com.kunpo.kunposdk.utils.KunpoLog;
 
 import org.json.JSONException;
@@ -125,14 +126,12 @@ public class KunpoHttpProxy {
                     httpsURLConnection.setDoInput(true);
                     //设置请求头
                     Map<String, String> headers = request.getHeaders();
+                    KunpoLog.i(TAG, "headers:" + headers.toString());
                     for (String key : headers.keySet()) {
                         httpsURLConnection.setRequestProperty(key, headers.get(key));
                     }
-                    JSONObject jsonObject = new JSONObject();
-                    Map<String, Object> params = request.getParams();
-                    for (Object key : params.keySet()) {
-                        jsonObject.put((String) key, params.get(key));
-                    }
+                    JSONObject jsonObject = JsonUtils.mapTojsonObject(request.getParams());
+                     KunpoLog.i(TAG, "params:" + jsonObject.toString());
                     //向服务器端写请求体,json格式
                     PrintWriter out = new PrintWriter(httpsURLConnection.getOutputStream());
                     out.write(jsonObject.toString());

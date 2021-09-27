@@ -86,7 +86,7 @@ public class LoginPhoneView extends BaseDialog {
                 }
                 // 手机号正确
                 KunpoLog.d(TAG, "手机号:" + phoneNumber);
-                RequestManager.getInstance().getVerifyCode(phoneNumber, 1, new VerifyCodeListener() {
+                RequestManager.getInstance().getVerifyCode(phoneNumber, 0, new VerifyCodeListener() {
                     public void onFailure(ErrorInfo errorInfo) {
                         // 获取验证码失败
                         ContextUtils.showToast(context, "验证码获取失败", Gravity.CENTER);

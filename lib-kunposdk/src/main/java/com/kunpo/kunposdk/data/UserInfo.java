@@ -2,6 +2,7 @@ package com.kunpo.kunposdk.data;
 
 import android.util.ArrayMap;
 
+import com.kunpo.kunposdk.utils.DeviceUtils;
 import com.kunpo.kunposdk.utils.JsonUtils;
 import com.kunpo.kunposdk.utils.Utils;
 
@@ -13,7 +14,7 @@ public class UserInfo {
     public String openid = ""; // openid
     public String uid = ""; // 客户端展示的用户ID（邀请码）
     public String token = ""; // token（请求接口需要携带此token）
-    public boolean isVisitor = true; // 是否游客
+    public int user_type = 1; // 用户类型（0 正式用户 1 游客用户）
     /**
      * 性别
      * 0:男 1:女 2:未知
@@ -62,67 +63,71 @@ public class UserInfo {
         return "Guest";
     }
 
+    public boolean isVisitor() {
+        return user_type == 1;
+    }
+
     public UserInfo loadMap(Map<String, Object> map) {
         openid = (String) map.get("openid");
         token = (String) map.get("token");
 
-        if (map.containsKey("uid")) {
+        if (map.containsKey("uid") && map.get("uid") instanceof String) {
             uid = (String) map.get("uid");
         }
 
-        if (map.containsKey("sex")) {
+        if (map.containsKey("sex") && map.get("sex") instanceof Integer) {
             sex = (int) map.get("sex");
         }
 
-        if (map.containsKey("status")) {
+        if (map.containsKey("status") && map.get("status") instanceof Integer) {
             status = (int) map.get("status");
         }
 
-        if (map.containsKey("nick_name")) {
+        if (map.containsKey("nick_name") && map.get("nick_name") instanceof String) {
             nick_name = (String) map.get("nick_name");
         }
 
-        if (map.containsKey("mail")) {
+        if (map.containsKey("mail") && map.get("mail") instanceof String) {
             mail = (String) map.get("mail");
         }
 
-        if (map.containsKey("avatar")) {
+        if (map.containsKey("avatar") && map.get("avatar") instanceof String) {
             avatar = (String) map.get("avatar");
         }
 
-        if (map.containsKey("phone_number")) {
+        if (map.containsKey("phone_number") && map.get("phone_number") instanceof String) {
             phone_number = (String) map.get("phone_number");
         }
 
-        if (map.containsKey("expire_time")) {
+        if (map.containsKey("expire_time") && map.get("expire_time") instanceof Integer) {
             expire_time = (int) map.get("expire_time");
         }
 
-        if (map.containsKey("single_max_pay")) {
+        if (map.containsKey("single_max_pay") && map.get("single_max_pay") instanceof Integer) {
             single_max_pay = (int) map.get("single_max_pay");
         }
 
-        if (map.containsKey("surplus_max_pay")) {
+        if (map.containsKey("surplus_max_pay") && map.get("surplus_max_pay") instanceof Integer) {
             surplus_max_pay = (int) map.get("surplus_max_pay");
         }
 
-        if (map.containsKey("played_time")) {
+        if (map.containsKey("played_time") && map.get("played_time") instanceof Integer) {
             played_time = (int) map.get("played_time");
         }
 
-        if (map.containsKey("surplus_play_time")) {
+        if (map.containsKey("surplus_play_time") && map.get("surplus_play_time") instanceof Integer) {
             surplus_play_time = (int) map.get("surplus_play_time");
         }
 
-        if (map.containsKey("refuse_msg")) {
+        if (map.containsKey("refuse_msg") && map.get("refuse_msg") instanceof String) {
             refuse_msg = (String) map.get("refuse_msg");
         }
 
-        if (map.containsKey("refuse_code")) {
+        if (map.containsKey("refuse_code") && map.get("refuse_code") instanceof Integer) {
             refuse_code = (int) map.get("refuse_code");
         }
-        if (map.containsKey("isVisitor")) {
-            isVisitor = Boolean.parseBoolean(String.valueOf(map.get("isVisitor")));
+        if (map.containsKey("user_type") && map.get("user_type") instanceof Integer) {
+            user_type = (int) map.get("user_type");
         }
         return this;
     }
@@ -136,7 +141,7 @@ public class UserInfo {
                 " status:" + status +
                 " expire_time:" + expire_time +
                 " refuse_code:" + refuse_code +
-                " isVisitor:" + isVisitor +
+                " user_type:" + user_type +
                 " refuse_msg:" + refuse_msg;
     }
 
@@ -157,7 +162,7 @@ public class UserInfo {
         map.put("expire_time", expire_time);
         map.put("refuse_code", refuse_code);
         map.put("refuse_msg", refuse_msg);
-        map.put("isVisitor", isVisitor);
+        map.put("user_type", user_type);
         return JsonUtils.mapToJsonString(map);
     }
 }

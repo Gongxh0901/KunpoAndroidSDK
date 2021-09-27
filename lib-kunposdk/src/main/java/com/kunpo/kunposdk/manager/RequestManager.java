@@ -39,7 +39,7 @@ public class RequestManager {
             public void onSuccess(Map<String, Object> mapResult) {
                 UserInfo userInfo = new UserInfo();
                 userInfo.loadMap(mapResult);
-                userInfo.isVisitor = false;
+                userInfo.user_type = 0;
                 DataManager.getInstance().userInfo = userInfo;
                 listener.onSuccess(userInfo);
             }
